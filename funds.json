@@ -1,0 +1,61 @@
+{"BJAN": [
+    {"call": true, "expir": [2023, 12, 29], "strike": 3.84, "qty": 1}, 
+    {"call": false, "expir": [2023, 12, 29], "strike": 348.01, "qty": -1}, 
+    {"call": false, "expir": [2023, 12, 29], "strike": 382.44, "qty": 1}, 
+    {"call": true, "expir": [2023, 12, 29], "strike": 478.31, "qty": -1}], 
+ "BFEB": [
+    {"call": true, "expir": [2024, 1, 31], "strike": 4.08, "qty": 1}, 
+    {"call": false, "expir": [2024, 1, 31], "strike": 369.9, "qty": -1}, 
+    {"call": false, "expir": [2024, 1, 31], "strike": 406.49, "qty": 1}, 
+    {"call": true, "expir": [2024, 1, 31], "strike": 485.66, "qty": -1}], 
+ "BMAR": [
+    {"call": true, "expir": [2024, 2, 29], "strike": 3.97, "qty": 1}, 
+    {"call": false, "expir": [2024, 2, 29], "strike": 360.6, "qty": -1}, 
+    {"call": false, "expir": [2024, 2, 29], "strike": 396.27, "qty": 1}, 
+    {"call": true, "expir": [2024, 2, 29], "strike": 480.47, "qty": -1}], 
+ "BAPR": [
+    {"call": true, "expir": [2024, 3, 28], "strike": 4.11, "qty": 1}, 
+    {"call": false, "expir": [2024, 3, 28], "strike": 372.54, "qty": -1}, 
+    {"call": false, "expir": [2024, 3, 28], "strike": 409.4, "qty": 1}, 
+    {"call": true, "expir": [2024, 3, 28], "strike": 491.84, "qty": -1}], 
+ "BMAY": [
+    {"call": true, "expir": [2024, 4, 30], "strike": 4.17, "qty": 1}, 
+    {"call": false, "expir": [2024, 4, 30], "strike": 378.5, "qty": -1}, 
+    {"call": false, "expir": [2024, 4, 30], "strike": 415.94, "qty": 1}, 
+    {"call": true, "expir": [2024, 4, 30], "strike": 496.87, "qty": -1}],
+ "BJUN": [
+    {"call": true, "expir": [2024, 5, 31], "strike": 4.19, "qty": 1}, 
+    {"call": false, "expir": [2024, 5, 31], "strike": 380.24, "qty": -1}, 
+    {"call": false, "expir": [2024, 5, 31], "strike": 417.86, "qty": 1}, 
+    {"call": true, "expir": [2024, 5, 31], "strike": 501.13, "qty": -1}],
+ "BJUL": [
+    {"call": true, "expir": [2024, 6, 28], "strike": 4.45, "qty": 1}, 
+    {"call": false, "expir": [2024, 6, 28], "strike": 403.38, "qty": -1}, 
+    {"call": false, "expir": [2024, 6, 28], "strike": 443.29, "qty": 1}, 
+    {"call": true, "expir": [2024, 6, 28], "strike": 528.61, "qty": -1}],
+ "BAUG": [
+    {"call": true, "expir": [2024, 7, 31], "strike": 4.59, "qty": 1}, 
+    {"call": false, "expir": [2024, 7, 31], "strike": 416.59, "qty": -1}, 
+    {"call": false, "expir": [2024, 7, 31], "strike": 457.80, "qty": 1}, 
+    {"call": true, "expir": [2024, 7, 31], "strike": 550.95, "qty": -1}],
+ "BSEP": [
+    {"call": true, "expir": [2024, 8, 30], "strike": 4.52, "qty": 1}, 
+    {"call": false, "expir": [2024, 8, 30], "strike": 409.82, "qty": -1}, 
+    {"call": false, "expir": [2024, 8, 30], "strike": 450.36, "qty": 1}, 
+    {"call": true, "expir": [2024, 8, 30], "strike": 539.38, "qty": -1}],
+ "BOCT": [
+    {"call": true, "expir": [2024, 9, 30], "strike": 4.29, "qty": 1}, 
+    {"call": false, "expir": [2024, 9, 30], "strike": 389.01, "qty": -1}, 
+    {"call": false, "expir": [2024, 9, 30], "strike": 427.49, "qty": 1}, 
+    {"call": true, "expir": [2024, 9, 30], "strike": 514.34, "qty": -1}],
+ "BNOV": [
+    {"call": true, "expir": [2024, 10, 31], "strike": 4.19, "qty": 1}, 
+    {"call": false, "expir": [2024, 10, 31], "strike": 380.56, "qty": -1}, 
+    {"call": false, "expir": [2024, 10, 31], "strike": 418.21, "qty": 1}, 
+    {"call": true, "expir": [2024, 10, 31], "strike": 504.22, "qty": -1}],
+ "BDEC": [
+    {"call": true, "expir": [2024, 11, 30], "strike": 4.09, "qty": 1}, 
+    {"call": false, "expir": [2024, 11, 30], "strike": 370.99, "qty": -1}, 
+    {"call": false, "expir": [2024, 11, 30], "strike": 407.69, "qty": 1}, 
+    {"call": true, "expir": [2024, 11, 30], "strike": 509.60, "qty": -1}]
+}
