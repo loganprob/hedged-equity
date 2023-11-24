@@ -57,5 +57,65 @@
     {"call": true, "expir": [2024, 11, 30], "strike": 4.09, "qty": 1}, 
     {"call": false, "expir": [2024, 11, 30], "strike": 370.99, "qty": -1}, 
     {"call": false, "expir": [2024, 11, 30], "strike": 407.69, "qty": 1}, 
-    {"call": true, "expir": [2024, 11, 30], "strike": 509.60, "qty": -1}]
+    {"call": true, "expir": [2024, 11, 30], "strike": 509.60, "qty": -1}],
+ "PJAN": [
+    {"call": true, "expir": [2023, 12, 29], "strike": 3.82, "qty": 1}, 
+    {"call": false, "expir": [2023, 12, 29], "strike": 325.07, "qty": -1}, 
+    {"call": false, "expir": [2023, 12, 29], "strike": 382.43, "qty": 1}, 
+    {"call": true, "expir": [2023, 12, 29], "strike": 454.48, "qty": -1}], 
+ "PFEB": [
+    {"call": true, "expir": [2024, 1, 31], "strike": 4.06, "qty": 1}, 
+    {"call": false, "expir": [2024, 1, 31], "strike": 345.51, "qty": -1}, 
+    {"call": false, "expir": [2024, 1, 31], "strike": 406.48, "qty": 1}, 
+    {"call": true, "expir": [2024, 1, 31], "strike": 464.77, "qty": -1}], 
+ "PMAR": [
+    {"call": true, "expir": [2024, 2, 29], "strike": 3.96, "qty": 1}, 
+    {"call": false, "expir": [2024, 2, 29], "strike": 336.82, "qty": -1}, 
+    {"call": false, "expir": [2024, 2, 29], "strike": 396.26, "qty": 1}, 
+    {"call": true, "expir": [2024, 2, 29], "strike": 459.54, "qty": -1}], 
+ "PAPR": [
+    {"call": true, "expir": [2024, 3, 28], "strike": 4.09, "qty": 1}, 
+    {"call": false, "expir": [2024, 3, 28], "strike": 347.98, "qty": -1}, 
+    {"call": false, "expir": [2024, 3, 28], "strike": 409.39, "qty": 1}, 
+    {"call": true, "expir": [2024, 3, 28], "strike": 470.59, "qty": -1}], 
+ "PMAY": [
+    {"call": true, "expir": [2024, 4, 30], "strike": 4.16, "qty": 1}, 
+    {"call": false, "expir": [2024, 4, 30], "strike": 353.54, "qty": -1}, 
+    {"call": false, "expir": [2024, 4, 30], "strike": 415.93, "qty": 1}, 
+    {"call": true, "expir": [2024, 4, 30], "strike": 476.32, "qty": -1}],
+ "PJUN": [
+    {"call": true, "expir": [2024, 5, 31], "strike": 4.18, "qty": 1}, 
+    {"call": false, "expir": [2024, 5, 31], "strike": 355.17, "qty": -1}, 
+    {"call": false, "expir": [2024, 5, 31], "strike": 417.85, "qty": 1}, 
+    {"call": true, "expir": [2024, 5, 31], "strike": 479.82, "qty": -1}],
+ "PJUL": [
+    {"call": true, "expir": [2024, 6, 28], "strike": 4.43, "qty": 1}, 
+    {"call": false, "expir": [2024, 6, 28], "strike": 376.79, "qty": -1}, 
+    {"call": false, "expir": [2024, 6, 28], "strike": 443.28, "qty": 1}, 
+    {"call": true, "expir": [2024, 6, 28], "strike": 506.62, "qty": -1}],
+ "PAUG": [
+    {"call": true, "expir": [2024, 7, 31], "strike": 4.58, "qty": 1}, 
+    {"call": false, "expir": [2024, 7, 31], "strike": 389.12, "qty": -1}, 
+    {"call": false, "expir": [2024, 7, 31], "strike": 457.79, "qty": 1}, 
+    {"call": true, "expir": [2024, 7, 31], "strike": 527.51, "qty": -1}],
+ "PSEP": [
+    {"call": true, "expir": [2024, 8, 30], "strike": 4.50, "qty": 1}, 
+    {"call": false, "expir": [2024, 8, 30], "strike": 382.80, "qty": -1}, 
+    {"call": false, "expir": [2024, 8, 30], "strike": 450.35, "qty": 1}, 
+    {"call": true, "expir": [2024, 8, 30], "strike": 517.77, "qty": -1}],
+ "POCT": [
+    {"call": true, "expir": [2024, 9, 30], "strike": 4.27, "qty": 1}, 
+    {"call": false, "expir": [2024, 9, 30], "strike": 363.36, "qty": -1}, 
+    {"call": false, "expir": [2024, 9, 30], "strike": 427.48, "qty": 1}, 
+    {"call": true, "expir": [2024, 9, 30], "strike": 493.74, "qty": -1}],
+ "PNOV": [
+    {"call": true, "expir": [2024, 10, 31], "strike": 4.18, "qty": 1}, 
+    {"call": false, "expir": [2024, 10, 31], "strike": 355.47, "qty": -1}, 
+    {"call": false, "expir": [2024, 10, 31], "strike": 418.20, "qty": 1}, 
+    {"call": true, "expir": [2024, 10, 31], "strike": 484.19, "qty": -1}],
+ "PDEC": [
+    {"call": true, "expir": [2024, 11, 30], "strike": 4.08, "qty": 1}, 
+    {"call": false, "expir": [2024, 11, 30], "strike": 346.53, "qty": -1}, 
+    {"call": false, "expir": [2024, 11, 30], "strike": 407.68, "qty": 1}, 
+    {"call": true, "expir": [2024, 11, 30], "strike": 482.61, "qty": -1}]
 }
