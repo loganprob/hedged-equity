@@ -54,10 +54,10 @@
     {"call": false, "expir": [2024, 10, 31], "strike": 418.21, "qty": 1}, 
     {"call": true, "expir": [2024, 10, 31], "strike": 504.22, "qty": -1}],
  "BDEC": [
-    {"call": true, "expir": [2024, 11, 30], "strike": 4.09, "qty": 1}, 
-    {"call": false, "expir": [2024, 11, 30], "strike": 370.99, "qty": -1}, 
-    {"call": false, "expir": [2024, 11, 30], "strike": 407.69, "qty": 1}, 
-    {"call": true, "expir": [2024, 11, 30], "strike": 509.60, "qty": -1}],
+    {"call": true, "expir": [2023, 11, 30], "strike": 4.09, "qty": 1}, 
+    {"call": false, "expir": [2023, 11, 30], "strike": 370.99, "qty": -1}, 
+    {"call": false, "expir": [2023, 11, 30], "strike": 407.69, "qty": 1}, 
+    {"call": true, "expir": [2023, 11, 30], "strike": 509.60, "qty": -1}],
  "PJAN": [
     {"call": true, "expir": [2023, 12, 29], "strike": 3.82, "qty": 1}, 
     {"call": false, "expir": [2023, 12, 29], "strike": 325.07, "qty": -1}, 
@@ -114,8 +114,8 @@
     {"call": false, "expir": [2024, 10, 31], "strike": 418.20, "qty": 1}, 
     {"call": true, "expir": [2024, 10, 31], "strike": 484.19, "qty": -1}],
  "PDEC": [
-    {"call": true, "expir": [2024, 11, 30], "strike": 4.08, "qty": 1}, 
-    {"call": false, "expir": [2024, 11, 30], "strike": 346.53, "qty": -1}, 
-    {"call": false, "expir": [2024, 11, 30], "strike": 407.68, "qty": 1}, 
-    {"call": true, "expir": [2024, 11, 30], "strike": 482.61, "qty": -1}]
+    {"call": true, "expir": [2023, 11, 30], "strike": 4.08, "qty": 1}, 
+    {"call": false, "expir": [2023, 11, 30], "strike": 346.53, "qty": -1}, 
+    {"call": false, "expir": [2023, 11, 30], "strike": 407.68, "qty": 1}, 
+    {"call": true, "expir": [2023, 11, 30], "strike": 482.61, "qty": -1}]
 }
