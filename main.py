@@ -3,14 +3,14 @@ import requests
 import math
 import xml.etree.ElementTree as ET
 import numpy as np
-import pandas as pd
+#import pandas as pd
 import datetime as dt
 from scipy import optimize
 from scipy import interpolate
 from scipy.stats import norm
 import numpy.random as rand
+#import matplotlib.pyplot as plt
 
-import matplotlib.pyplot as plt
 
 
 #################### YIELD CURVE MATH ####################
@@ -45,6 +45,7 @@ def bootstrap_spot(par_params): # need to take another look at, probably make mo
         c = max(0,get_rate(times[len(spots)], par_params)/2)
         spots.append(((1+c)/(1-sum([c/((1+s)**t) for s,t in zip(spots,times)])))**(1/times[len(spots)])-1)
     return dict(zip(times,spots))
+
 
 
 #################### OPTION MATH ####################
@@ -134,6 +135,7 @@ def rehedging_strike_solver(goal, start_spy, sim_spy, time_elapsed, r, q):
     return round(optimize.minimize(strike_error, x0=[1.1], args=(goal/sim_spy))['x'][0]*sim_spy,2)
 
 
+
 #################### DATA GATHERING ####################
 
 
@@ -190,6 +192,7 @@ def gather_data():
     ivol_model = calibrate_iv_surface(spy_chain, spy_price, div_yld, spot_params)
     
     return spy_price, div_yld, spot_params, ivol_model
+
 
 
 #################### OPTION/FUND CLASSES ####################
@@ -266,7 +269,7 @@ class Fund:
         self.starting_nav = round(estimate_nav, 2)
     
     # one big change/improvement over the previous version is that all of the rehedging logic and tracking nav/returns has been moved from the monte-carlo simulation to the Fund class
-    # keeps the simulation much less cluttered/confusing... impact on performance currently unknown
+    # keeps the simulation much less cluttered/confusing
     def simulate_rehedge(self, rehedge_date, starting_spy, rehedge_spy, rehedge_div, spot_params, ivol_model, rf_adjust=1, vol_adjust=1, hard_rehedge=False):
         # this is built specifically for the Buffer and Power Buffer funds, but want to make more general eventually
         new_expir = rehedge_date + dt.timedelta(days=365)
@@ -302,10 +305,11 @@ class Fund:
         return fund_return
 
 
+
 #################### MONTE-CARLO ####################
 
 
-def montecarlo_single(funds, spy_price, div_yld, spot_params, ivol_model, simulation_period=30, rf_vol=0.0, vol_vol=0.0, debug_mode=False, debug_funds = []): 
+def montecarlo_single(funds, spy_price, div_yld, spot_params, ivol_model, simulation_period=30, rf_vol=0.0, vol_vol=0.0, debug_mode=False, debug_funds = []): # <-- debug stuff is mostly removed
     # if in debug_mode only run one at a time
     sim_start_date = dt.date.today()
     sim_end_date = sim_start_date + dt.timedelta(days=simulation_period)
@@ -314,14 +318,12 @@ def montecarlo_single(funds, spy_price, div_yld, spot_params, ivol_model, simula
         debug_funds = list(funds.keys()) if len(debug_funds)==0 else debug_funds
     else:
         sim_dates = sorted(set([*[f.rehedge_date for f in funds.values() if f.rehedge_date < sim_end_date], sim_end_date]))
-    #for f in funds.values():
-    #    f.reset()
-
+        
     sim_spy = spy_price
     for i, sim_date in enumerate(sim_dates):
         sim_elapsed_time = (sim_date - dt.date.today()).days/365
         sim_jump_time = (sim_date - sim_dates[i-1]).days/365 if i > 0 else sim_elapsed_time # time since the last repricing date
-        # added imprecise randomness to the system... get adjustments to the yield curve and ivol surface to apply across all the funds
+        # added some imprecise randomness to the system... get adjustments to the yield curve and ivol surface to apply across all the funds
         rf_adjust = math.exp(rand.normal(0,rf_vol/(1/sim_elapsed_time)**0.5))
         vol_adjust = math.exp(rand.normal(0,vol_vol/(1/sim_elapsed_time)**0.5))
         sim_spy_meanret = (1 + get_rate(sim_elapsed_time, spot_params) - div_yld)**(sim_jump_time) - 1
@@ -337,8 +339,34 @@ def montecarlo_single(funds, spy_price, div_yld, spot_params, ivol_model, simula
             return spy_return, fund_returns
 
 
+def montecarlo_many(funds, spy_price, div_yld, spot_params, ivol_model, simulation_period=30, num_simulations=100, rf_vol=0.0, vol_vol=0.0):
+    spy_returns = []
+    fund_returns = {ticker: [] for ticker in funds}
+    i = 0
+    while i < num_simulations:
+        s_ret, f_ret = montecarlo_single(funds, spy_price, div_yld, spot_params, ivol_model, simulation_period=simulation_period, rf_vol=rf_vol, vol_vol=vol_vol)
+        spy_returns.append(s_ret)
+        for f in f_ret:
+            fund_returns[f].append(f_ret[f])
+            funds[f].reset()
+        i += 1
+    return spy_returns, fund_returns
+
+
+
 #################### EXECUTION ####################
 
+
 spy_price, div_yld, spot_params, ivol_model = gather_data()
+
+with open('funds.json', 'r') as f:
+    funds_data = json.load(f)
+funds = {ticker: Fund(ticker, {Option(o['call'], dt.date(*o['expir']), o['strike']):o['qty'] for o in funds_data[ticker]}) for ticker in funds_data}
+for fund in funds.values():
+    fund.rehedge_buffer = 0.91 if fund.ticker[0]=='B' else 0.85
+    fund.estimate_starting_nav(spy_price, div_yld, spot_params, ivol_model)
+
+spy_returns, fund_returns = montecarlo_many(funds, spy_price, div_yld, spot_params, ivol_model, simulation_period=30, num_simulations=1000, rf_vol=0.05, vol_vol=0.1)
+    
 
 
