@@ -25,9 +25,9 @@ def get_rate(t, param):
     return b0 + b1 * ((1-math.exp(-t/d0))/(t/d0)) + b2 * ((1-math.exp(-t/d0))/(t/d0) - math.exp(-t/d0)) + b3 * ((1-math.exp(-t/d1))/(t/d1) - math.exp(-t/d1))
 
 
-def get_fwd_rate(fwd_time, term, spot_params):
-    a = (1 + get_rate(fwd_time, spot_params))**(fwd_time)
-    b = (1 + get_rate(fwd_time + term, spot_params))**(fwd_time + term)
+def get_fwd_rate(fwd_time, term, spot_params, rf_adjust=1):
+    a = (1 + get_rate(fwd_time, spot_params)*rf_adjust)**(fwd_time)
+    b = (1 + get_rate(fwd_time + term, spot_params)*rf_adjust)**(fwd_time + term)
     return (b/a)**(1/term)-1
 
 
@@ -192,6 +192,153 @@ def gather_data():
     return spy_price, div_yld, spot_params, ivol_model
 
 
+#################### OPTION/FUND CLASSES ####################
+
+
+class Option:
+    def __init__(self, iscall, expir, strike):
+        self.iscall = iscall
+        self.expir = expir
+        self.strike = strike
+        
+    def __str__(self):
+        return f"{self.expir} - {'C' if self.iscall else 'P'} - ${self.strike}" # this is just for quality of life while writing/debugging
+    
+    def mark(self, mark_date, mark_spy, mark_div, mark_rf, mark_iv):
+        flag = 1 if self.iscall else -1
+        t = (self.expir - mark_date).days/365
+        lnsk = math.log(mark_spy/self.strike)
+        seqt = mark_spy * math.exp(-mark_div * t)
+        kert = self.strike * math.exp(-mark_rf * t)
+        sqrt = t**0.5
+        d1 = (lnsk + t * (mark_rf - mark_div + 0.5 * (mark_iv ** 2))) / (mark_iv * sqrt)
+        d2 = d1 - (mark_iv * sqrt)
+        return round(flag * (seqt * norm.cdf(flag * d1) - kert * norm.cdf(flag * d2)),2)
+    
+    def payoff(self, spy):
+        return max(0, (1 if self.iscall else -1) * (spy - self.strike))
+    
+    def get_ivol(self, mark_date, starting_spy, mark_spy, ivol_model, vol_adjust=1):
+        # handles the looking-up/forecasting of ivol in simulations... Fund functions were getting too cluttered
+        time_to_expir = (self.expir - mark_date).days/365
+        relative_strike = math.log(self.strike/mark_spy)
+        starting_ivol_equivalent_timestrike = ivol_model([[time_to_expir, relative_strike]])[0]
+        predicted_ivol = forecast_ivol((mark_date - dt.date.today()).days/365, time_to_expir, relative_strike, math.log(mark_spy/starting_spy), starting_ivol_equivalent_timestrike)
+        return predicted_ivol * vol_adjust
+
+class Fund:
+    def __init__(self, ticker, options):
+        # couple things to keep in mind with this model of funds:
+        #    nav will always be in terms of SPY, not actual NAV per share
+        #    any cash in the fund is ignored, not neccesary and probably impossible to track 
+        #    expenses are ignored, the thought is that they affect all funds the same
+        #    only built for funds with a single expiration across all held options
+        #        eventually I want to change this, and some functions may reflect that foward thinking, but it's not capable to handle this currently
+        #        the solution may be to have a parent class that can hold multiple 'funds', each with a single expiration... haven't thought it fully through yet
+        self.ticker = ticker
+        self.options = options
+        self.starting_nav = 0 
+        self.rehedge_date = min([o.expir for o in self.options])
+        self.rehedge_buffer = 0
+
+        self.rehedge_completed = False
+        self.rehedge_options = {}
+        self.rehedge_nav_adjustment = 1
+    
+    def __str__(self):
+        return f'{self.ticker}: {[str(o) for o in self.options]}' # this is just for quality of life while writing/debugging
+    
+    def reset(self):
+        self.rehedge_completed = False
+        self.rehedge_options = {}
+        self.rehedge_nav_adjustment = 1
+
+    def estimate_starting_nav(self, mark_spy, mark_div, spot_params, ivol_model):
+        if self.rehedge_date <= dt.date.today():
+            print(f'WARNING: {self.ticker} holds options that have expired or are expiring today... will attempt to rehedge, but consider updating data or waiting for fund to trade')
+            self.simulate_rehedge(dt.date.today(), mark_spy, mark_spy, mark_div, spot_params, ivol_model, hard_rehedge=True)
+        time_to_expir = (self.rehedge_date-dt.date.today()).days/365
+        rf = get_rate(time_to_expir, spot_params)
+        # consider checking the OCC's FLEX reports at this point for estimate accuracy... might learn something about their pricing model (it's a tree, but black-box) if there are patterns
+        # https://www.theocc.com/market-data/market-data-reports/series-and-trading-data/flex-reports
+        # https://www.cboe.com/us/options/market_statistics/flex_trade_reports/
+        estimate_nav = sum([(o.mark(dt.date.today(), mark_spy, mark_div, rf, ivol_model([[time_to_expir, math.log(o.strike/mark_spy)]])[0]))*q for o,q in self.options.items()])
+        self.starting_nav = round(estimate_nav, 2)
+    
+    # one big change/improvement over the previous version is that all of the rehedging logic and tracking nav/returns has been moved from the monte-carlo simulation to the Fund class
+    # keeps the simulation much less cluttered/confusing... impact on performance currently unknown
+    def simulate_rehedge(self, rehedge_date, starting_spy, rehedge_spy, rehedge_div, spot_params, ivol_model, rf_adjust=1, vol_adjust=1, hard_rehedge=False):
+        # this is built specifically for the Buffer and Power Buffer funds, but want to make more general eventually
+        new_expir = rehedge_date + dt.timedelta(days=365)
+        simulated_fwd_time = (rehedge_date-dt.date.today()).days/365
+        rehedge_rf = get_rate(1,spot_params)*rf_adjust if simulated_fwd_time==0 else get_fwd_rate(simulated_fwd_time,1,spot_params, rf_adjust=rf_adjust)
+
+        known_strike_options = [Option(True, new_expir, round(rehedge_spy*0.01,2)), Option(False, new_expir, round(rehedge_spy,2)), Option(False, new_expir, round(rehedge_spy*self.rehedge_buffer,2))]
+        known_strike_forecast_ivols = [o.get_ivol(rehedge_date, starting_spy, rehedge_spy, ivol_model, vol_adjust=vol_adjust) for o in known_strike_options]
+        short_call_goal_val = sum([q*o.mark(rehedge_date, rehedge_spy, rehedge_div, rehedge_rf, iv) for q,o,iv in zip([1,1,-1], known_strike_options, known_strike_forecast_ivols)]) - rehedge_spy*0.99
+        short_call_strike = rehedging_strike_solver(short_call_goal_val, starting_spy, rehedge_spy, simulated_fwd_time, rehedge_rf, rehedge_div)
+
+        options = {o:q for o,q in zip(known_strike_options, [1,1,-1])} | {Option(True, new_expir, short_call_strike):-1}
+
+        if hard_rehedge: # not in a simulation, i.e. running the script on the day that something rehedges
+            self.options = options
+            self.rehedge_date = new_expir
+            return
+        self.rehedge_completed = True
+        self.rehedge_options = options
+        return
+    
+    def simulate_return(self, mark_date, starting_spy, mark_spy, mark_div, spot_params, ivol_model, rf_adjust=1, vol_adjust=1):
+        if mark_date == self.rehedge_date:
+            payoff_nav = sum([o.payoff(mark_spy)*q for o,q in self.options.items()])
+            self.simulate_rehedge(mark_date, starting_spy, mark_spy, mark_div, spot_params, ivol_model, rf_adjust=rf_adjust, vol_adjust=vol_adjust)
+            mark_rf = get_fwd_rate((mark_date-dt.date.today()).days/365,(min([o.expir for o in self.rehedge_options])-mark_date).days/365,spot_params,rf_adjust=rf_adjust)
+            new_nav = sum([o.mark(mark_date, mark_spy, mark_div, mark_rf, o.get_ivol(mark_date, starting_spy, mark_spy, ivol_model, vol_adjust=vol_adjust))*q for o,q in self.rehedge_options.items()])
+            self.rehedge_nav_adjustment = new_nav/payoff_nav
+        mark_options = self.rehedge_options if self.rehedge_completed else self.options
+        mark_rf = get_fwd_rate((mark_date-dt.date.today()).days/365,(min([o.expir for o in mark_options])-mark_date).days/365,spot_params,rf_adjust=rf_adjust)
+        mark_nav = sum([o.mark(mark_date, mark_spy, mark_div, mark_rf, o.get_ivol(mark_date, starting_spy, mark_spy, ivol_model, vol_adjust=vol_adjust))*q for o,q in mark_options.items()])
+        fund_return = mark_nav/(self.starting_nav*self.rehedge_nav_adjustment)-1
+        return fund_return
+
+
+#################### MONTE-CARLO ####################
+
+
+def montecarlo_single(funds, spy_price, div_yld, spot_params, ivol_model, simulation_period=30, rf_vol=0.0, vol_vol=0.0, debug_mode=False, debug_funds = []): 
+    # if in debug_mode only run one at a time
+    sim_start_date = dt.date.today()
+    sim_end_date = sim_start_date + dt.timedelta(days=simulation_period)
+    if debug_mode:
+        sim_dates = [j for j in [sim_start_date + dt.timedelta(days=i+1) for i in range(simulation_period)] if j.weekday()<5]
+        debug_funds = list(funds.keys()) if len(debug_funds)==0 else debug_funds
+    else:
+        sim_dates = sorted(set([*[f.rehedge_date for f in funds.values() if f.rehedge_date < sim_end_date], sim_end_date]))
+    #for f in funds.values():
+    #    f.reset()
+
+    sim_spy = spy_price
+    for i, sim_date in enumerate(sim_dates):
+        sim_elapsed_time = (sim_date - dt.date.today()).days/365
+        sim_jump_time = (sim_date - sim_dates[i-1]).days/365 if i > 0 else sim_elapsed_time # time since the last repricing date
+        # added imprecise randomness to the system... get adjustments to the yield curve and ivol surface to apply across all the funds
+        rf_adjust = math.exp(rand.normal(0,rf_vol/(1/sim_elapsed_time)**0.5))
+        vol_adjust = math.exp(rand.normal(0,vol_vol/(1/sim_elapsed_time)**0.5))
+        sim_spy_meanret = (1 + get_rate(sim_elapsed_time, spot_params) - div_yld)**(sim_jump_time) - 1
+        sim_spy_vol = ivol_model([[sim_elapsed_time, 0]])[0]
+        sim_spy *= math.exp(rand.normal(sim_spy_meanret,sim_spy_vol/(1/sim_jump_time)**0.5))
+
+        mark_tickers = debug_funds if debug_mode else [ticker for ticker, fund in funds.items() if fund.rehedge_date == sim_date]
+        for ticker in mark_tickers:
+            funds[ticker].simulate_return(sim_date, spy_price, sim_spy, div_yld, spot_params, ivol_model, rf_adjust=rf_adjust, vol_adjust=vol_adjust)
+        if i==len(sim_dates)-1:
+            spy_return = sim_spy/spy_price-1
+            fund_returns = {ticker:fund.simulate_return(sim_date, spy_price, sim_spy, div_yld, spot_params, ivol_model, rf_adjust=rf_adjust, vol_adjust=vol_adjust) for ticker, fund in funds.items()}
+            return spy_return, fund_returns
+
+
 #################### EXECUTION ####################
 
 spy_price, div_yld, spot_params, ivol_model = gather_data()
+
+
