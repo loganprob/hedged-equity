@@ -1,0 +1,39 @@
+{
+    "innovator_buffer": {
+        "nav_relative_spy": 0.99, 
+        "known_strike_options": [
+            {"quantity": 1, "time": 1, "iscall": true, "relative_strike": 0.01}, 
+            {"quantity": 1, "time": 1, "iscall": false, "relative_strike": 1.0}, 
+            {"quantity": -1, "time": 1, "iscall": false, "relative_strike": 0.91}], 
+        "solve_strike_option": 
+            {"quantity": -1, "time": 1, "iscall": true}
+    }, 
+    "innovator_power_buffer": {
+        "nav_relative_spy": 0.99, 
+        "known_strike_options": [
+            {"quantity": 1, "time": 1, "iscall": true, "relative_strike": 0.01}, 
+            {"quantity": 1, "time": 1, "iscall": false, "relative_strike": 1.0}, 
+            {"quantity": -1, "time": 1, "iscall": false, "relative_strike": 0.85}], 
+        "solve_strike_option": 
+            {"quantity": -1, "time": 1, "iscall": true}
+    }, 
+    "innovator_ultra_buffer": {
+        "nav_relative_spy": 0.99, 
+        "known_strike_options": [
+            {"quantity": 1, "time": 1, "iscall": true, "relative_strike": 0.01}, 
+            {"quantity": 1, "time": 1, "iscall": false, "relative_strike": 0.95}, 
+            {"quantity": -1, "time": 1, "iscall": false, "relative_strike": 0.65}], 
+        "solve_strike_option": 
+            {"quantity": -1, "time": 1, "iscall": true}
+    }, 
+    "innovator_accelerated_buffer": {
+        "nav_relative_spy": 0.99, 
+        "known_strike_options": [
+            {"quantity": 1, "time": 1, "iscall": true, "relative_strike": 0.01}, 
+            {"quantity": 1, "time": 1, "iscall": false, "relative_strike": 1.0},
+            {"quantity": 1, "time": 1, "iscall": true, "relative_strike": 1.0}, 
+            {"quantity": -1, "time": 1, "iscall": false, "relative_strike": 0.91}], 
+        "solve_strike_option": 
+            {"quantity": -2, "time": 1, "iscall": true}
+    }
+}
