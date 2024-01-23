@@ -1,10 +1,10 @@
 {
     "BJAN": {
         "holdings": [
-            {"call": true, "expir": [2023, 12, 29], "strike": 3.84, "qty": 1},
-            {"call": false, "expir": [2023, 12, 29], "strike": 348.01, "qty": -1}, 
-            {"call": false, "expir": [2023, 12, 29], "strike": 382.44, "qty": 1}, 
-            {"call": true, "expir": [2023, 12, 29], "strike": 478.31, "qty": -1}], 
+            {"call": true, "expir": [2024, 12, 31], "strike": 4.77, "qty": 1},
+            {"call": false, "expir": [2024, 12, 31], "strike": 432.53, "qty": -1}, 
+            {"call": false, "expir": [2024, 12, 31], "strike": 475.32, "qty": 1}, 
+            {"call": true, "expir": [2024, 12, 31], "strike": 560.87, "qty": -1}], 
         "rehedge": "innovator_buffer"}, 
     "BFEB": {
         "holdings": [
@@ -85,10 +85,10 @@
         "rehedge": "innovator_buffer"}, 
     "PJAN": {
         "holdings": [
-            {"call": true, "expir": [2023, 12, 29], "strike": 3.82, "qty": 1}, 
-            {"call": false, "expir": [2023, 12, 29], "strike": 325.07, "qty": -1}, 
-            {"call": false, "expir": [2023, 12, 29], "strike": 382.43, "qty": 1}, 
-            {"call": true, "expir": [2023, 12, 29], "strike": 454.48, "qty": -1}], 
+            {"call": true, "expir": [2024, 12, 31], "strike": 4.75, "qty": 1}, 
+            {"call": false, "expir": [2024, 12, 31], "strike": 404.01, "qty": -1}, 
+            {"call": false, "expir": [2024, 12, 31], "strike": 475.31, "qty": 1}, 
+            {"call": true, "expir": [2024, 12, 31], "strike": 543.04, "qty": -1}], 
         "rehedge": "innovator_power_buffer"}, 
     "PFEB": {
         "holdings": [
@@ -169,10 +169,10 @@
         "rehedge": "innovator_power_buffer"}, 
     "UJAN": {
         "holdings": [
-            {"call": true, "expir": [2023, 12, 29], "strike": 3.81, "qty": 1}, 
-            {"call": false, "expir": [2023, 12, 29], "strike": 248.58, "qty": -1}, 
-            {"call": false, "expir": [2023, 12, 29], "strike": 363.31, "qty": 1}, 
-            {"call": true, "expir": [2023, 12, 29], "strike": 445.15, "qty": -1}], 
+            {"call": true, "expir": [2024, 12, 31], "strike": 4.74, "qty": 1}, 
+            {"call": false, "expir": [2024, 12, 31], "strike": 308.95, "qty": -1}, 
+            {"call": false, "expir": [2024, 12, 31], "strike": 451.54, "qty": 1}, 
+            {"call": true, "expir": [2024, 12, 31], "strike": 541.57, "qty": -1}], 
         "rehedge": "innovator_ultra_buffer"}, 
     "UFEB": {
         "holdings": [
@@ -253,11 +253,11 @@
         "rehedge": "innovator_ultra_buffer"}, 
     "XBJA": {
         "holdings": [
-            {"call": true, "expir": [2023, 12, 29], "strike": 3.8, "qty": 1}, 
-            {"call": true, "expir": [2023, 12, 29], "strike": 382.43, "qty": 1}, 
-            {"call": false, "expir": [2023, 12, 29], "strike": 382.42, "qty": 1}, 
-            {"call": false, "expir": [2023, 12, 29], "strike": 348.0, "qty": -1}, 
-            {"call": true, "expir": [2023, 12, 29], "strike": 417.23, "qty": -2}], 
+            {"call": true, "expir": [2024, 12, 31], "strike": 4.72, "qty": 1}, 
+            {"call": true, "expir": [2024, 12, 31], "strike": 475.30, "qty": 1}, 
+            {"call": false, "expir": [2024, 12, 31], "strike": 475.30, "qty": 1}, 
+            {"call": false, "expir": [2024, 12, 31], "strike": 432.52, "qty": -1}, 
+            {"call": true, "expir": [2024, 12, 31], "strike": 505.49, "qty": -2}], 
         "rehedge": "innovator_accelerated_buffer"}, 
     "XBAP": {
         "holdings": [
