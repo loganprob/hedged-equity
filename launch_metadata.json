@@ -1,6 +1,6 @@
 {
-    "msg_warning": null,
-    "msg_info": null,
+    "msg_warning": "WARNING: TEST WARNING MESSAGE",
+    "msg_info": "INFO: Test info message",
     "prompt_update":[2024,1,24],
     "required_local_folders": [],
     "trading_holidays":[
